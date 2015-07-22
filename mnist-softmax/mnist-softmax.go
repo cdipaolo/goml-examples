@@ -11,6 +11,10 @@ import (
 	mnist "github.com/petar/GoMNIST"
 )
 
+const (
+	Epochs int64 = 1
+)
+
 func newBar(count int64) *pb.ProgressBar {
 	bar := pb.New64(count)
 
@@ -58,28 +62,33 @@ func main() {
 		size := train.Count()
 		bytes, label := train.Get(0)
 
-		bar := newBar(int64(size))
+		bar := newBar(int64(size) * Epochs)
 		bar.Start()
 		count := 0
-		for count = 0; count < size; count++ {
-			x := make([]float64, len(bytes))
-			y := []float64{float64(label)}
+		for iter := int64(0); iter < Epochs; iter++ {
+			for count = 0; count < size; count++ {
+				x := make([]float64, len(bytes))
+				y := []float64{float64(label)}
 
-			for i := range bytes {
-				x[i] = float64(bytes[i]) / 255
+				for i := range bytes {
+					// x[i] = float64(bytes[i]) / 255
+					if bytes[i] > uint8(200) {
+						x[i] = 1
+					}
+				}
+
+				stream <- base.Datapoint{
+					X: x,
+					Y: y,
+				}
+
+				bytes, label = train.Get(count)
+
+				bar.Increment()
 			}
-
-			stream <- base.Datapoint{
-				X: x,
-				Y: y,
-			}
-
-			bytes, label = train.Get(count)
-
-			bar.Increment()
 		}
 
-		bar.FinishPrint(fmt.Sprintf("Loaded %v examples onto the data stream", count))
+		bar.FinishPrint(fmt.Sprintf("Loaded %v examples onto the data stream\n\tRepeated through %v epochs", count, Epochs))
 
 		close(stream)
 	}()
@@ -116,7 +125,10 @@ func main() {
 		x := make([]float64, len(bytes))
 
 		for i := range bytes {
-			x[i] = float64(bytes[i]) / 255
+			//x[i] = float64(bytes[i]) / 255
+			if bytes[i] > uint8(200) {
+				x[i] = 1
+			}
 		}
 
 		guess, err := model.Predict(x)
