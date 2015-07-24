@@ -15,7 +15,7 @@ const (
 	// Epochs defines the number of
 	// iterations the model will go
 	// through the data
-	Epochs int64 = 1
+	Epochs int64 = 20
 )
 
 func newBar(count int64) *pb.ProgressBar {
@@ -126,7 +126,7 @@ func batchLearn(train *mnist.Set) *linear.Softmax {
 
 		for i := range bytes {
 			//x[i] = float64(bytes[i]) / 255
-			if bytes[i] > uint8(200) {
+			if bytes[i] > uint8(167) {
 				inp[i] = 1
 			}
 		}
@@ -142,7 +142,6 @@ func batchLearn(train *mnist.Set) *linear.Softmax {
 	bar.FinishPrint(fmt.Sprintf("Loaded %v examples into < Batch Softmax >\n\tTook %v", count, time.Now().Sub(now)))
 
 	model := linear.NewSoftmax(base.StochasticGA, 1e-5, 10, 10, int(Epochs), x, y)
-	fmt.Println(model.Parameters[0])
 
 	now = time.Now()
 	fmt.Printf("Starting Training of < Batch Softmax > at %v over %v epochs\n", now, Epochs)
@@ -215,9 +214,9 @@ func main() {
 
 	fmt.Printf("MNIST dataset loaded!\n\t%v Training Examples\n\t%v Test Examples\n", len(train.Images), len(test.Images))
 
-	online := onlineLearn(train)
+	//online := onlineLearn(train)
 
-	eval(online, test, "Online Softmax")
+	//eval(online, test, "Online Softmax")
 
 	batch := batchLearn(train)
 
