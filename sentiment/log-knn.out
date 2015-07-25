@@ -1,0 +1,63 @@
+Parsing Data Into Datapoints
+	Starting at 2015-07-24 21:54:56.855163093 -0700 PDT
+Starting adding words from < ./amazon_cells_labelled.txt > to word bank at 2015-07-24 21:54:56.855777481 -0700 PDT
+Finished adding words from < ./amazon_cells_labelled.txt > to bank
+	delta: 79.1446ms
+Starting adding words from < ./yelp_labelled.txt > to word bank at 2015-07-24 21:54:56.935040139 -0700 PDT
+Finished adding words from < ./yelp_labelled.txt > to bank
+	delta: 19.520527ms
+Starting adding words from < ./imdb_labelled.txt > to word bank at 2015-07-24 21:54:56.954615364 -0700 PDT
+Finished adding words from < ./imdb_labelled.txt > to bank
+	delta: 6.704736ms
+Starting munging from < ./amazon_cells_labelled.txt > to data at 2015-07-24 21:54:56.961358428 -0700 PDT
+
+Finished munging from < ./amazon_cells_labelled.txt > to data
+	delta: 89.212879ms
+Starting munging from < ./yelp_labelled.txt > to data at 2015-07-24 21:54:57.050716287 -0700 PDT
+
+Finished munging from < ./yelp_labelled.txt > to data
+	delta: 38.871487ms
+Starting munging from < ./imdb_labelled.txt > to data at 2015-07-24 21:54:57.089698416 -0700 PDT
+
+Finished munging from < ./imdb_labelled.txt > to data
+	delta: 38.993513ms
+Shuffling the data now!
+	Started: 2015-07-24 21:54:57.128827777 -0700 PDT
+Finshed shuffling!
+	Took 250.274µs
+Parsing Data Finished!
+	Ending in 273.921674ms
+	3000, 3000 datapoints recorded for x,y | x in R^12715
+Starting with KNN model!
+	Started 2015-07-24 21:54:57.129096857 -0700 PDT
+
+Finished Testing < K-Nearest-Neighbors >
+	Accuracy: 66.5 percent
+	Misclassifications: 201
+	Examples tested: 600
+	Average Classification Time: 70.071659ms
+	Took 42.043541638s
+Finished testing KNN model!
+	Took 42.043608032s
+Starting with KNN model!
+	Started 2015-07-24 21:55:39.172709581 -0700 PDT
+
+Finished Testing < K-Nearest-Neighbors >
+	Accuracy: 63.5 percent
+	Misclassifications: 219
+	Examples tested: 600
+	Average Classification Time: 68.015947ms
+	Took 40.810104329s
+Finished testing KNN model!
+	Took 40.810158482s
+Starting with KNN model!
+	Started 2015-07-24 21:56:19.982873079 -0700 PDT
+
+Finished Testing < K-Nearest-Neighbors >
+	Accuracy: 67.66666666666667 percent
+	Misclassifications: 194
+	Examples tested: 600
+	Average Classification Time: 66.192911ms
+	Took 39.71627902s
+Finished testing KNN model!
+	Took 39.716345748s

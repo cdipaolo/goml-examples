@@ -1,0 +1,32 @@
+Parsing Data Into Datapoints
+	Starting at 2015-07-24 21:58:27.773022344 -0700 PDT
+Starting adding words from < ./amazon_cells_labelled.txt > to word bank at 2015-07-24 21:58:27.773497384 -0700 PDT
+Finished adding words from < ./amazon_cells_labelled.txt > to bank
+	delta: 84.554521ms
+Starting adding words from < ./yelp_labelled.txt > to word bank at 2015-07-24 21:58:27.858133569 -0700 PDT
+Finished adding words from < ./yelp_labelled.txt > to bank
+	delta: 21.427826ms
+Starting adding words from < ./imdb_labelled.txt > to word bank at 2015-07-24 21:58:27.879609314 -0700 PDT
+Finished adding words from < ./imdb_labelled.txt > to bank
+	delta: 6.890963ms
+Starting munging from < ./amazon_cells_labelled.txt > to data at 2015-07-24 21:58:27.886554917 -0700 PDT
+
+Finished munging from < ./amazon_cells_labelled.txt > to data
+	delta: 90.81803ms
+Starting munging from < ./yelp_labelled.txt > to data at 2015-07-24 21:58:27.977507349 -0700 PDT
+
+Finished munging from < ./yelp_labelled.txt > to data
+	delta: 44.566476ms
+Starting munging from < ./imdb_labelled.txt > to data at 2015-07-24 21:58:28.022176376 -0700 PDT
+
+Finished munging from < ./imdb_labelled.txt > to data
+	delta: 30.793617ms
+Shuffling the data now!
+	Started: 2015-07-24 21:58:28.053075149 -0700 PDT
+Finshed shuffling!
+	Took 240.336µs
+Parsing Data Finished!
+	Ending in 280.299655ms
+	3000, 3000 datapoints recorded for x,y | x in R^12715
+Starting with KNN model!
+	Started 2015-07-24 21:58:28.053333002 -0700 PDT

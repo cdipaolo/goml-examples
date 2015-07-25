@@ -10,6 +10,10 @@ import (
 	"time"
 
 	"golang.org/x/text/transform"
+
+	"github.com/cdipaolo/goml/base"
+	"github.com/cdipaolo/goml/linear"
+	//"github.com/cdipaolo/goml/cluster"
 )
 
 var (
@@ -140,7 +144,7 @@ func addWordsToGlobalMap(filepath string) {
 				continue
 			}
 
-			// add word to map if the word isn't present
+			// add word to map if the word is present
 			if _, there := words[text[i]]; !there {
 				words[text[i]] = count
 				count++
@@ -190,10 +194,6 @@ func parseDataIntoPoints() ([][]float64, []float64) {
 	for i := range x {
 		j := rand.Intn(i + 1)
 		x[i], x[j] = x[j], x[i]
-	}
-
-	for i := range y {
-		j := rand.Intn(i + 1)
 		y[i], y[j] = y[j], y[i]
 	}
 
@@ -202,11 +202,107 @@ func parseDataIntoPoints() ([][]float64, []float64) {
 	return x, y
 }
 
+func abs(x float64) float64 {
+	if x < 0 {
+		return -1 * x
+	}
+	return x
+}
+
+type model interface {
+	Predict([]float64, ...bool) ([]float64, error)
+}
+
+func testModel(m model, desc string, test [][]float64, testY []float64) {
+	now := time.Now()
+
+	var count int
+	var wrong int
+
+	duration := time.Duration(0)
+
+	for i := range test {
+		start := time.Now()
+		guess, err := m.Predict(test[i])
+		duration += time.Now().Sub(start)
+		if err != nil {
+			panic(err.Error())
+		}
+
+		if abs(guess[0]-testY[i]) > 1e-2 {
+			wrong++
+		}
+		count++
+
+		if count%50 == 0 {
+			print(".")
+		}
+	}
+
+	averageTime := duration / time.Duration(len(test))
+
+	fmt.Printf("\nFinished Testing < %v >\n\tAccuracy: %v percent\n\tMisclassifications: %v\n\tExamples tested: %v\n\tAverage Classification Time: %v\n\tTook %v\n", desc, 100*(1-float64(wrong)/float64(count)), wrong, count, averageTime, time.Now().Sub(now))
+}
+
 func main() {
 	now := time.Now()
 	fmt.Printf("Parsing Data Into Datapoints\n\tStarting at %v\n", now)
 
 	x, y := parseDataIntoPoints()
 
-	fmt.Printf("Parsing Data Finished!\n\tEnding in %v\n\t%v, %v datapoints recorded for x,y\n", time.Now().Sub(now), len(x), len(y))
+	fmt.Printf("Parsing Data Finished!\n\tEnding in %v\n\t%v, %v datapoints recorded for x,y | x in R^%v\n", time.Now().Sub(now), len(x), len(y), len(words))
+
+	// separate training and test sets
+	trainLen := int(0.8 * float64(len(x)))
+	train := x[:trainLen]
+	trainY := y[:trainLen]
+
+	test := x[trainLen:]
+	testY := y[trainLen:]
+
+	/*// * Use KNN Model * //
+
+	now = time.Now()
+	fmt.Printf("Starting with KNN model!\n\tStarted %v\n", now)
+
+	knn := cluster.NewKNN(3, train, trainY, base.EuclideanDistance)
+
+	testModel(knn, "K-Nearest-Neighbors", test, testY)
+	fmt.Printf("Finished testing KNN model!\n\tTook %v\n", time.Now().Sub(now))
+
+	// use k = 5 now
+
+	now = time.Now()
+	fmt.Printf("Starting with KNN model!\n\tStarted %v\n", now)
+
+	knn.K = 5
+
+	testModel(knn, "K-Nearest-Neighbors", test, testY)
+	fmt.Printf("Finished testing KNN model!\n\tTook %v\n", time.Now().Sub(now))
+
+	// use k = 9 now
+
+	now = time.Now()
+	fmt.Printf("Starting with KNN model!\n\tStarted %v\n", now)
+
+	knn.K = 9
+
+	testModel(knn, "K-Nearest-Neighbors", test, testY)
+	fmt.Printf("Finished testing KNN model!\n\tTook %v\n", time.Now().Sub(now))*/
+
+	// * Use Logistic Model * //
+	logistic := linear.NewLogistic(base.StochasticGA, 1e-4, 0.0, 10, train, trainY)
+
+	now = time.Now()
+	fmt.Printf("Training logistic model!\n\tStarted %v\n", now)
+
+	err := logistic.Learn()
+	if err != nil {
+		fmt.Printf("Error found when training logistic model!\n\tTook %v\n", time.Now().Sub(now))
+		panic(err.Error())
+	}
+
+	testModel(logistic, "Batch Logistic Regression", test, testY)
+
+	fmt.Printf("Finished training logistic model!\n\tTook %v\n", time.Now().Sub(now))
 }
